@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dev Roadmap — Muhammad · May 2026 → Feb 2027</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d0f;--card:#141417;--card2:#1a1a1f;--border:#2a2a30;
+  --text:#e8e8ec;--muted:#7a7a85;--mono:'JetBrains Mono',monospace;--head:'Syne',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--head);padding:0 0 64px;min-height:100vh}
+
+.stats-bar{display:flex;justify-content:center;gap:0;padding:20px 16px 0;max-width:760px;margin:0 auto}
+.stat{flex:1;text-align:center;padding:14px 8px;border:1px solid var(--border);background:var(--card)}
+.stat:first-child{border-radius:10px 0 0 10px}
+.stat:last-child{border-radius:0 10px 10px 0}
+.stat+.stat{border-left:none}
+.stat-val{font-family:var(--mono);font-size:20px;font-weight:700;line-height:1}
+.stat-label{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:5px}
+
+.header{text-align:center;padding:32px 16px 28px;border-bottom:1px solid var(--border);max-width:760px;margin:0 auto}
+.tag{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+h1{font-size:30px;font-weight:800;line-height:1.15;background:linear-gradient(135deg,#6ee7b7,#60a5fa 40%,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.sub{font-size:12px;color:var(--muted);font-family:var(--mono);line-height:1.7}
+
+.overview{max-width:760px;margin:24px auto 0;padding:0 16px}
+.overview-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.phase-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid;cursor:pointer;transition:opacity .15s,transform .15s}
+.pill:hover{opacity:.8;transform:translateY(-1px)}
+
+.timeline{max-width:760px;margin:28px auto 0;padding:0 16px}
+.tl-hint{font-family:var(--mono);font-size:10px;color:var(--muted);text-align:center;margin-bottom:24px;letter-spacing:1px}
+
+.phase{position:relative;margin-bottom:20px}
+.phase-header{display:flex;align-items:flex-start;gap:14px;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .2s;position:relative;z-index:1}
+.phase:hover .phase-header,.phase.open .phase-header{border-color:var(--phase-color,var(--border))}
+.phase.open .phase-header{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+
+.dot{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;border:2px solid;transition:transform .2s,box-shadow .2s}
+.phase:hover .dot,.phase.open .dot{transform:scale(1.08);box-shadow:0 0 16px var(--phase-glow,transparent)}
+
+.phase-top{flex:1;min-width:0}
+.phase-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.phase-num{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.badge{font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid}
+.dsa-badge{font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid;border-color:#f472b644;color:#f472b6;background:#f472b611}
+.phase-title{font-size:17px;font-weight:700;margin-bottom:3px;line-height:1.2}
+.phase-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
+.hours-chip{flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hours-big{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1}
+.hours-label{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.chevron{font-size:12px;color:var(--muted);margin-top:4px;transition:transform .25s}
+.phase.open .chevron{transform:rotate(180deg)}
+
+.phase-body{display:none;background:var(--card);border:1px solid;border-top:none;border-radius:0 0 14px 14px;overflow:hidden}
+.phase.open .phase-body{display:block}
+
+.section{padding:16px 20px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.sec-title{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.split-col{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px}
+.split-col-title{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+@media(max-width:520px){.split-grid{grid-template-columns:1fr}}
+
+.hours-table{width:100%;border-collapse:collapse}
+.hours-table tr{border-bottom:1px solid var(--border)}
+.hours-table tr:last-child{border:none}
+.hours-table td{padding:7px 4px;font-size:12px;vertical-align:middle}
+.hours-table td:first-child{color:var(--muted);font-family:var(--mono);font-size:10px;padding-right:12px}
+.hours-table td:last-child{font-family:var(--mono);font-size:11px;text-align:right;white-space:nowrap;padding-left:12px;width:50px}
+.h-bar-wrap{width:100%;background:var(--border);border-radius:2px;height:4px;display:block;margin-top:5px}
+.h-bar{height:4px;border-radius:2px}
+
+.topics{display:flex;flex-wrap:wrap;gap:6px}
+.topic{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:6px;border:1px solid;line-height:1.6}
+
+.week-list{list-style:none}
+.week-item{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.week-item:last-child{border:none}
+.week-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.week-text{font-size:12px;color:var(--text);line-height:1.55}
+
+.res-list{display:flex;flex-wrap:wrap;gap:6px}
+.res{font-size:11px;padding:4px 10px;border-radius:6px;background:var(--card2);border:1px solid var(--border);color:var(--muted);font-family:var(--mono)}
+
+.milestone-box{padding:14px 20px;display:flex;align-items:center;gap:12px;background:var(--card2)}
+.ms-icon{font-size:20px;flex-shrink:0}
+.ms-label{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:4px}
+.ms-text{font-size:13px;font-weight:600;line-height:1.4}
+
+.schedule-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.sch-block{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.sch-time{font-family:var(--mono);font-size:9px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.sch-task{font-size:11px;line-height:1.4}
+.sch-hrs{font-family:var(--mono);font-size:11px;margin-top:4px}
+
+.footer{text-align:center;padding:40px 16px 0;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px}
+
+.phase.completed .phase-header{background:linear-gradient(135deg,#6ee7b70d,#141417 60%)}
+.phase.completed .dot{background:#6ee7b722}
+.completed-banner{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;padding:2px 10px;border-radius:20px;background:#6ee7b722;border:1px solid #6ee7b755;color:#6ee7b7;text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.completed-stripe{position:absolute;top:0;left:0;right:0;height:2px;border-radius:14px 14px 0 0;background:linear-gradient(90deg,#6ee7b7,#34d399 50%,transparent)}
+.phase.completed .phase-header{border-color:#6ee7b744 !important}
+
+@media(max-width:520px){
+  h1{font-size:22px}.hours-big{font-size:18px}.phase-title{font-size:15px}.stat-val{font-size:16px}.hours-chip{display:none}
+}
+</style>
+</head>
+<body>
+
+<div style="max-width:760px;margin:0 auto">
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-val" style="color:#6ee7b7">9</div><div class="stat-label">Months</div></div>
+    <div class="stat"><div class="stat-val" style="color:#60a5fa">~950</div><div class="stat-label">Total Hours</div></div>
+    <div class="stat"><div class="stat-val" style="color:#6ee7b7">1<span style="font-size:13px;color:var(--muted)">/5</span></div><div class="stat-label">Phases Done</div></div>
+    <div class="stat"><div class="stat-val" style="color:#fbbf24">150+</div><div class="stat-label">LC Problems</div></div>
+    <div class="stat"><div class="stat-val" style="color:#a78bfa">3</div><div class="stat-label">Projects</div></div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="tag">// phase 1 complete · dsa starts june · dev starts aug · dsa never stops · interviews feb+</div>
+  <h1>C++ → DSA → Dev<br>→ Projects → Job</h1>
+  <div class="sub">
+    ~4–5h/day · dsa runs parallel with dev from august onwards<br>
+    angela yu for js foundations · odin project + docs for backend depth
+  </div>
+</div>
+
+<div class="overview">
+  <div class="overview-label">Jump to phase</div>
+  <div class="phase-pills" id="pills"></div>
+</div>
+
+<div class="timeline">
+  <div class="tl-hint">↓ click any phase to expand</div>
+  <div id="tl"></div>
+</div>
+
+<div class="footer">built for the grind · you vs you · no excuses</div>
+
+<script>
+const phases = [
+  {
+    n:"01", dur:"Completed ✓ · May 2026", color:"#6ee7b7",
+    completed: true,
+    dsaOnly: true,
+    title:"C++, OOP & STL — Foundation Complete",
+    desc:"Full C++ foundation built. Classes, constructors, destructors, inheritance, polymorphism, abstract classes, operator overloading — all done. STL fully fluent (vector, map, set, stack, queue, priority_queue, iterators, lambdas). Chapter closed. DSA starts now.",
+    totalHours: 120,
+    hoursBreakdown:[
+      {task:"OOP — classes, constructors, destructors", hrs:25, pct:21},
+      {task:"OOP — inheritance, polymorphism, abstract", hrs:25, pct:21},
+      {task:"OOP — copy constructor, operator overloading", hrs:20, pct:17},
+      {task:"STL containers — vector, map, set, deque, stack, queue", hrs:25, pct:21},
+      {task:"STL algorithms + iterators + lambdas", hrs:15, pct:12},
+      {task:"Practice programs using OOP + STL", hrs:10, pct:8},
+    ],
+    dailySchedule:[
+      {time:"Morning 2h", task:"Topic study — OOP concept or STL container", hrs:"2h"},
+      {time:"Afternoon 1.5h", task:"Build programs from scratch using the concept", hrs:"1.5h"},
+      {time:"Evening 30min", task:"Revise + small challenge", hrs:"0.5h"},
+    ],
+    topics:["Classes & objects","Constructors & destructors","Copy constructor","this pointer","Static members & methods","Operator overloading","Friend functions","Single inheritance","Multiple inheritance","Hierarchical inheritance","Polymorphism (virtual functions)","Abstract classes & pure virtual","vector (all methods)","map / unordered_map","set / multiset / unordered_set","deque / stack / queue","priority_queue","pair / tuple","sort (custom comparator)","lower_bound / upper_bound","accumulate / count / find","Iterators","auto keyword","Range-based for loops","Lambda functions"],
+    weeks:[
+      {w:"OOP Phase", text:"Completed: BankAccount/SavingsAccount class hierarchy. Built constructors, copy constructors (with & reference), destructors, static members, operator overloading (+, ==, <<), friend functions, multi-level and hierarchical inheritance, virtual functions, abstract classes with pure virtual. Polymorphism via base pointers confirmed working."},
+      {w:"STL Phase", text:"Completed: vector, sort with custom comparator, stack, queue, deque, iterators (begin/end/rbegin), pair, map, unordered_map, set, unordered_set, multiset, priority_queue (min + max heap via comparator). Lambda functions and range-based for loops. All containers used in practice programs."},
+    ],
+    resources:["cppreference.com STL section","learncpp.com chapters 16–23","The Cherno OOP + STL videos (YouTube)"],
+    milestone:{icon:"✅", label:"Phase 1 complete — C++ closed forever", text:"OOP fully fluent · STL mastered · Can build class hierarchies + use any STL container from memory · DSA starts now"}
+  },
+  {
+    n:"02", dur:"June – July 2026 · 8 weeks", color:"#60a5fa",
+    dsaOnly: true,
+    title:"DSA Fundamentals + Git",
+    desc:"Core patterns that show up in every interview. Arrays, recursion, linked lists, trees — build these cold. Also: Git and GitHub set up on Day 1. Every single solution gets pushed. Your commit history is your first portfolio.",
+    totalHours: 210,
+    hoursBreakdown:[
+      {task:"Git & GitHub basics (Day 1 setup)", hrs:8, pct:4},
+      {task:"Arrays, strings, prefix sums, Kadane's", hrs:33, pct:16},
+      {task:"Two pointers + sliding window", hrs:25, pct:12},
+      {task:"Hashing + frequency maps", hrs:20, pct:10},
+      {task:"Linked lists — all variants", hrs:25, pct:12},
+      {task:"Stacks & queues + applications", hrs:20, pct:10},
+      {task:"Recursion + backtracking intro", hrs:35, pct:17},
+      {task:"Sorting + binary search", hrs:20, pct:10},
+      {task:"Binary trees — traversals + problems", hrs:24, pct:11},
+    ],
+    dailySchedule:[
+      {time:"Morning 2h", task:"Learn topic — Striver / NeetCode video", hrs:"2h"},
+      {time:"Afternoon 2h", task:"Solve 3–5 LeetCode problems, push to GitHub", hrs:"2h"},
+      {time:"Evening 30min", task:"Re-solve any problem you got wrong", hrs:"0.5h"},
+    ],
+    topics:["git init / add / commit / push","git branch / merge / rebase","git log / diff / stash","GitHub repos + README","Commit message conventions","Pushing DSA solutions daily","Prefix sums","Kadane's algo","Dutch flag","Two pointers","Sliding window","Frequency maps","Linked list reversal","Floyd's cycle detection","Monotonic stack","Next greater element","Recursion trees","Subset generation","Permutations","Merge sort","Quick sort","Binary search variants","Tree traversals (recursive + iterative)","Level order BFS","Tree diameter","LCA"],
+    weeks:[
+      {w:"Day 1 (Git)", text:"Before anything else: install Git, create GitHub account, set up your DSA repo. Learn: git init, add, commit, push, branch, merge. From this day forward, every single solution you write gets committed and pushed. Your GitHub contribution graph is visible to recruiters — start it green from day one"},
+      {w:"Week 1–2", text:"Arrays: prefix sums, Kadane's, Dutch flag, rotate, trapping rain water. Strings: anagrams, palindromes, sliding window (longest substring without repeat). Hashing: two-sum, grouping anagrams, subarray with given sum. Target 25 problems"},
+      {w:"Week 3", text:"Two pointers: pair sum, 3Sum, container with most water. Sliding window: max sum subarray of size k, minimum window substring, longest substring with k distinct chars. 15 problems — draw the window movement before coding"},
+      {w:"Week 4", text:"Linked lists: reversal, merge two sorted, detect cycle (Floyd's), find middle, remove nth from end, add two numbers, copy list with random pointer. Implement singly + doubly from scratch in C++"},
+      {w:"Week 5", text:"Stacks: valid parentheses, next greater element, largest rectangle in histogram, min stack, asteroid collision. Queues: circular queue, sliding window maximum, implement queue using two stacks. 15 problems"},
+      {w:"Week 6", text:"Recursion fundamentals: factorial, fibonacci, power(x,n), all subsets, all permutations, Tower of Hanoi. Backtracking intro: combination sum, letter combinations of phone number, N-Queens. Draw the recursion tree every time — it's the whole point"},
+      {w:"Week 7", text:"Sorting: implement merge sort + quick sort, count inversions. Binary search: classic, rotated sorted array (search + find min), first and last position, search in 2D matrix, find peak element, koko eating bananas. 20 problems"},
+      {w:"Week 8", text:"Binary trees: inorder/preorder/postorder (recursive + iterative), level order BFS, max depth, symmetric tree, path sum I+II, diameter, zigzag traversal, LCA. Build a BST from scratch. Attempt a LeetCode weekly contest this week"},
+    ],
+    resources:["Striver's A2Z DSA Sheet","NeetCode.io — attempt first, watch after","LeetCode (C++, Easy → Medium)","Abdul Bari recursion playlist","Git official docs (git-scm.com)","GitHub Student Developer Pack (you have this)"],
+    milestone:{icon:"🎯", label:"Phase 2 done — foundations locked + Git fluent", text:"70–80 LeetCode problems solved · Core patterns fluent · GitHub commit streak started · Dev starts next month"}
+  },
+  {
+    n:"03", dur:"Aug – Sep 2026 · 8 weeks", color:"#f472b6",
+    dsaOnly: false,
+    splitPhase: true,
+    title:"Advanced DSA + Dev Begins (Angela Yu JS) + Linux",
+    desc:"DSA goes harder — graphs, DP, heaps. Dev starts in parallel: Angela Yu for HTML/CSS/JS. Also: Linux basics in Week 1. Morning = DSA grind. Afternoon = Angela Yu. Two tracks, every day.",
+    totalHours: 250,
+    splitSchedule: true,
+    hoursBreakdown:[
+      {task:"Linux & terminal basics (Week 1)", hrs:10, pct:4},
+      {task:"Graphs: BFS, DFS, Dijkstra, topo sort", hrs:50, pct:20},
+      {task:"Dynamic programming — 20+ patterns", hrs:60, pct:24},
+      {task:"BST + Heaps + Tries", hrs:35, pct:14},
+      {task:"Angela Yu — HTML + CSS", hrs:35, pct:14},
+      {task:"Angela Yu — JavaScript fundamentals", hrs:40, pct:16},
+      {task:"Mini JS project (vanilla)", hrs:20, pct:8},
+    ],
+    dailySchedule:[
+      {time:"Morning 2.5h", task:"DSA — graphs / DP topic + problems", hrs:"2.5h"},
+      {time:"Afternoon 2h", task:"Angela Yu lecture → rebuild from scratch", hrs:"2h"},
+      {time:"Evening 30min", task:"LeetCode problem or JS mini exercise", hrs:"0.5h"},
+    ],
+    topics:["Linux terminal basics","WSL2 setup (Windows)","ls / cd / mkdir / rm / cp / mv","grep / cat / less / head / tail","chmod / chown (file permissions)","ps / kill / top (process mgmt)","ssh basics","Bash scripting intro","Graph adjacency list","BFS (shortest path)","DFS + cycle detection","Topological sort (Kahn's + DFS)","Dijkstra","Bellman-Ford","Union-Find","MST (Kruskal's + Prim's)","0/1 knapsack","Unbounded knapsack","LCS / LIS","Coin change","Edit distance","DP on trees","BST ops + validation","Top-K heap","Median stream","Trie insert/search","HTML5 semantics","CSS flexbox","CSS grid","Media queries","JS ES6+","DOM manipulation","Fetch API","async/await"],
+    weeks:[
+      {w:"Week 1 (Linux)", text:"Set up WSL2 on your Lenovo LOQ (or use Linux VM). Learn: ls, cd, mkdir, rm, cp, mv, cat, grep, chmod, ps, kill, ssh. Backend servers run Linux — you need to be comfortable here before you deploy anything. Takes 2–3 evenings max, not a full week"},
+      {w:"DSA Week 1–2", text:"Graphs: adjacency list representation, BFS (shortest path in unweighted graph), DFS, bipartite check, cycle detection undirected. Then directed: cycle detection (DFS coloring), topological sort — both Kahn's BFS and DFS versions"},
+      {w:"DSA Week 3", text:"Graphs advanced: Dijkstra (priority queue), Bellman-Ford, Floyd-Warshall. Union-Find with path compression + union by rank. Kruskal's + Prim's MST. These will come up in product company interviews"},
+      {w:"DSA Week 4–5", text:"DP — the phase inside the phase. Memoisation vs tabulation. 1D: climbing stairs, house robber, coin change, decode ways. 2D: 0/1 knapsack, LCS, LIS, edit distance, matrix chain. DP on trees. Minimum 25 DP problems — no shortcuts"},
+      {w:"DSA Week 6–7", text:"BST: validate, kth smallest, inorder successor, LCA. Heaps: top-K, K closest, median of stream (two heaps), merge K sorted lists. Tries: insert/search/startsWith, longest word with all prefixes. Greedy: activity selection, jump game, interval scheduling"},
+      {w:"DEV Week 1–2 (Aug)", text:"Angela Yu: HTML5 structure, semantic tags, forms. CSS box model, selectors, specificity. Then flexbox — spend extra time here, it's the most important CSS skill. Build a static responsive page"},
+      {w:"DEV Week 3–4 (Aug)", text:"Angela Yu: CSS Grid, media queries, CSS variables. Then JavaScript starts — variables, data types, functions, scope, closures, arrays, objects. Arrow functions, destructuring, spread/rest, array methods (map/filter/reduce)"},
+      {w:"DEV Week 5–6 (Sep)", text:"Angela Yu: async JS — callbacks, promises, async/await. Fetch API (call a public API, render results on page). DOM manipulation: querySelector, addEventListener, classList. Build one complete vanilla JS app and deploy it on GitHub Pages"},
+    ],
+    resources:["Striver's Graph playlist (YouTube)","Striver's DP playlist (YouTube)","NeetCode 150 list","Angela Yu — Web Dev Bootcamp (Sections 1–16, skip Bootstrap + jQuery + EJS)","javascript.info (read alongside for deeper JS)","MDN Web Docs","WSL2 official docs (Microsoft)","Linux Command Line (free book — linuxcommand.org)"],
+    milestone:{icon:"⚡", label:"Phase 3 done — two weapons loaded", text:"Graphs + DP solid · 120–130 LC problems total · Linux terminal comfortable · HTML/CSS/JS foundations done · 1 mini project live"}
+  },
+  {
+    n:"04", dur:"Oct – Nov 2026 · 8 weeks", color:"#fbbf24",
+    dsaOnly: false,
+    title:"Backend Dev — Node.js + Express + Databases + DBMS",
+    desc:"Your main sellable skill. Angela Yu's Node sections get you started, then Odin Project and docs take you deeper. DBMS theory (ACID, normalization, indexing) studied properly — this comes up in every interview. DSA continues daily — 1 medium without fail.",
+    totalHours: 240,
+    hoursBreakdown:[
+      {task:"Node.js core (modules, event loop, npm)", hrs:25, pct:10},
+      {task:"Express.js (routing, middleware, error handling)", hrs:35, pct:15},
+      {task:"MongoDB + Mongoose (Angela Yu sections)", hrs:30, pct:12},
+      {task:"PostgreSQL + SQL + joins (self-study)", hrs:30, pct:12},
+      {task:"DBMS theory — ACID, normalization, indexing", hrs:15, pct:6},
+      {task:"JWT auth + bcrypt (self-study, not Angela Yu)", hrs:25, pct:10},
+      {task:"REST API design + Zod validation", hrs:20, pct:8},
+      {task:"Docker basics + Render deployment", hrs:15, pct:6},
+      {task:"Project 1 — full backend API", hrs:35, pct:15},
+      {task:"DSA daily (1 medium/day)", hrs:15, pct:6},
+    ],
+    dailySchedule:[
+      {time:"Morning 30min", task:"LeetCode — 1 medium, no skipping", hrs:"0.5h"},
+      {time:"Morning 1.5h", task:"Backend concept / Angela Yu Node section", hrs:"1.5h"},
+      {time:"Afternoon 2.5h", task:"Build + rebuild from scratch without tutorial", hrs:"2.5h"},
+      {time:"Evening 1h", task:"Project 1 work / gap-filling (JWT, PostgreSQL, DBMS theory)", hrs:"1h"},
+    ],
+    topics:["Node modules (CommonJS + ESM)","npm + package.json","Event loop intuition","fs + path modules","http module (build raw server)","Express routing","Middleware chain","Error handling middleware","Request validation (Zod)","MongoDB Atlas setup","Mongoose schemas + CRUD","Mongoose relationships","Aggregation pipeline","PostgreSQL setup","SQL joins + subqueries","Indexing basics","pg npm package","Prisma ORM (optional)","ACID properties (Atomicity, Consistency, Isolation, Durability)","Normalization (1NF / 2NF / 3NF / BCNF)","B-tree indexing theory","Database transactions + locks","N+1 query problem","bcrypt hashing","JWT access + refresh tokens","Protected route middleware","RBAC (admin vs user)","CORS","Rate limiting","Helmet.js","Dockerfile","docker-compose","Deploy to Render"],
+    weeks:[
+      {w:"Week 1", text:"Node.js: module system, npm, package.json scripts, file system (fs), path, http module — build a raw server without Express to understand what Express actually does. Event loop intuition — watch Philip Roberts' 'What the heck is the event loop' video"},
+      {w:"Week 2–3", text:"Express.js: Angela Yu's Node sections here. Routing (GET/POST/PUT/DELETE), route params + query strings, body parsing, middleware (what it actually is — a function that runs between request and response), error handling middleware, modular routes with Router"},
+      {w:"Week 4", text:"MongoDB: Angela Yu's MongoDB sections. Atlas setup, Mongoose schemas, CRUD, relationships (populate), aggregation pipeline basics. This gets you comfortable but don't stop here — SQL is coming"},
+      {w:"Week 5", text:"PostgreSQL + DBMS theory — self study. Install locally + use Neon/Supabase (free). SQL: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE, JOINs (inner/left/right), GROUP BY, subqueries, indexes. Use the 'pg' npm package. THEN cover DBMS theory: ACID properties, normalization (1NF→3NF), B-tree indexing, transactions + isolation levels, the N+1 query problem. This is the theory behind everything you just practiced."},
+      {w:"Week 6", text:"Auth — JWT, not sessions. Self study here too. bcrypt for hashing, JWT (jsonwebtoken package) for access + refresh tokens, protected middleware, storing refresh tokens in DB, RBAC. Build this entire auth flow from scratch — it comes up in every interview"},
+      {w:"Week 7", text:"Polish: CORS, rate limiting, Helmet security headers, .env + dotenv, input validation with Zod. Docker: write a Dockerfile, docker-compose with app + PostgreSQL database. Deploy to Render with environment variables set"},
+      {w:"Week 8", text:"Project 1: full REST API with JWT auth, 2+ resources, PostgreSQL, Dockerised, deployed on Render. Write a clean README with setup instructions, API endpoints documented. This goes on your resume"},
+    ],
+    resources:["Angela Yu — Node + Express + MongoDB sections","The Odin Project — NodeJS path (free, go deeper after Angela Yu)","Traversy Media — Node/Express crash course (YouTube)","PostgreSQL official docs + 'pg' npm docs","Neon.tech (free PostgreSQL hosting)","Render.com (free deployment)","Arpit Bhayani — DBMS playlist (YouTube, excellent for theory)"],
+    milestone:{icon:"🚀", label:"Phase 4 done — backend is real", text:"Project 1 live: REST API + JWT + PostgreSQL + Docker on Render · DBMS theory solid · DSA streak unbroken · Resume has something real on it"}
+  },
+  {
+    n:"05", dur:"Dec 2026 – Jan 2027 · 8 weeks", color:"#a78bfa",
+    dsaOnly: false,
+    title:"React + Projects + Job-Ready Polish",
+    desc:"Minimal React — enough to build frontends for your APIs. Then 2 more projects and make your GitHub look like a working developer. Interviews start February.",
+    totalHours: 220,
+    hoursBreakdown:[
+      {task:"React fundamentals (components, hooks)", hrs:30, pct:14},
+      {task:"React Router + connecting to backend", hrs:15, pct:7},
+      {task:"Project 2 — fullstack (React + Node + PostgreSQL)", hrs:55, pct:25},
+      {task:"Project 3 — backend-heavy (WebSockets or Redis)", hrs:40, pct:18},
+      {task:"System design basics (HLD concepts)", hrs:20, pct:9},
+      {task:"Resume + LinkedIn + GitHub polish", hrs:15, pct:7},
+      {task:"DSA daily + LeetCode hard problems", hrs:25, pct:11},
+      {task:"OS + DBMS + CN basics (CS fundamentals)", hrs:20, pct:9},
+    ],
+    dailySchedule:[
+      {time:"Morning 30min", task:"LeetCode — 1 medium or hard", hrs:"0.5h"},
+      {time:"Morning 1.5h", task:"React / project building", hrs:"1.5h"},
+      {time:"Afternoon 2.5h", task:"Project work — features, polish, deploy", hrs:"2.5h"},
+      {time:"Evening 1h", task:"System design / CS fundamentals reading", hrs:"1h"},
+    ],
+    topics:["JSX syntax","Functional components","useState","useEffect","useRef","useContext","Custom hooks","React Router v6","Protected routes (frontend)","Axios / Fetch in React","JWT in localStorage","Vercel deployment","Socket.io (real-time)","Redis caching concept","BullMQ job queues (optional)","System design vocab","Load balancing","Caching strategies","CAP theorem basics","OS: processes + threads","DBMS: ACID + normalization + joins","CN: HTTP/HTTPS + TCP/IP + DNS","Resume: 1 page, quantified impact","LinkedIn: featured projects","GitHub: pinned repos + READMEs"],
+    weeks:[
+      {w:"Week 1", text:"React: JSX, functional components, useState, useEffect, props, lists + keys, conditional rendering, React Router v6 (routes, params, protected routes). Angela Yu React section is fine here. By end of week connect a React app to your Phase 4 Node API"},
+      {w:"Week 2–4", text:"Project 2 — fullstack centrepiece. Build something you'd actually use. Must have: React frontend + Node/Express backend + PostgreSQL + JWT auth + full CRUD + deployed (Vercel for frontend, Render for backend). Write a README with screenshots"},
+      {w:"Week 5–6", text:"Project 3 — go deeper on backend. Pick one: real-time chat with Socket.io + MongoDB, URL shortener with click analytics + Redis caching, or job queue system with BullMQ + worker threads. Deploy it. This shows you can go beyond CRUD"},
+      {w:"Week 7", text:"CS fundamentals for interviews — don't skip this. OS: processes vs threads, deadlocks, virtual memory, paging. DBMS: ACID properties, normalization (1NF–3NF), indexing (B-tree), transactions. CN: OSI model, TCP vs UDP, HTTP 1.1/2/3, DNS resolution, HTTPS + TLS handshake"},
+      {w:"Week 8", text:"Polish everything. Resume: 1 page only, quantify impact ('API handles 300+ req/s'), link to live projects + GitHub. LinkedIn: proper about section, featured projects pinned. GitHub: 3 pinned repos, each with screenshots in README. Mock interview with a friend or Pramp. Interviews start February"},
+    ],
+    resources:["react.dev (official React docs)","Angela Yu — React sections","Socket.io docs","Upstash (free Redis)","Arpit Bhayani — OS/DBMS/CN playlists","Pramp (free mock interviews)","Tech Interview Handbook (free, techinterviewhandbook.org)"],
+    milestone:{icon:"🏆", label:"Phase 5 done — ready for Feb interviews", text:"3 live projects · React + Node + PostgreSQL stack · DSA 150+ problems · CS fundamentals covered · Resume + LinkedIn live · Start applying"}
+  }
+];
+
+const pillsEl = document.getElementById('pills');
+phases.forEach((p,i)=>{
+  const pill = document.createElement('span');
+  pill.className='pill';
+  pill.style.cssText=`border-color:${p.color}44;color:${p.color};background:${p.color}11`;
+  pill.textContent=`${p.n} ${p.title.split(' ').slice(0,3).join(' ')}`;
+  pill.onclick=()=>{
+    const el=document.querySelectorAll('.phase')[i];
+    el.classList.add('open');
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  pillsEl.appendChild(pill);
+});
+
+const tl=document.getElementById('tl');
+phases.forEach((p,i)=>{
+  const el=document.createElement('div');
+  el.className='phase' + (p.completed ? ' completed' : '');
+  el.style.setProperty('--phase-color',p.color);
+  el.style.setProperty('--phase-glow',p.color+'44');
+
+  const dsaBadge = p.dsaOnly
+    ? `<span class="badge" style="border-color:${p.color}44;color:${p.color};background:${p.color}11">${p.completed ? 'dsa only' : 'dsa only'}</span>`
+    : `<span class="dsa-badge">dsa continues daily</span>`;
+
+  const completedBadge = p.completed
+    ? `<span class="completed-banner">✓ completed</span>`
+    : '';
+
+  const completedStripe = p.completed
+    ? `<div class="completed-stripe"></div>`
+    : '';
+
+  el.innerHTML=`
+    <div class="phase-header">
+      ${completedStripe}
+      <div class="dot" style="border-color:${p.color};color:${p.color}">${p.completed ? '✓' : p.n}</div>
+      <div class="phase-top">
+        <div class="phase-meta">
+          <span class="phase-num">Phase ${p.n}</span>
+          <span class="badge" style="border-color:${p.color}44;color:${p.color};background:${p.color}11">${p.dur}</span>
+          ${completedBadge}
+          ${!p.completed ? dsaBadge : ''}
+        </div>
+        <div class="phase-title" style="color:${p.color}">${p.title}</div>
+        <div class="phase-desc">${p.desc}</div>
+      </div>
+      <div class="hours-chip">
+        <div class="hours-big" style="color:${p.color}">${p.totalHours}</div>
+        <div class="hours-label">hours</div>
+        <div class="chevron" style="color:${p.color}">▼</div>
+      </div>
+    </div>
+    <div class="phase-body" style="border-color:${p.color}44">
+
+      <div class="section">
+        <div class="sec-title" style="color:${p.color}">Daily schedule</div>
+        <div class="schedule-grid">
+          ${p.dailySchedule.map(s=>`
+            <div class="sch-block">
+              <div class="sch-time">${s.time}</div>
+              <div class="sch-task">${s.task}</div>
+              <div class="sch-hrs" style="color:${p.color}">${s.hrs}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-title" style="color:${p.color}">Hours breakdown — ${p.totalHours}h total</div>
+        <table class="hours-table">
+          ${p.hoursBreakdown.map(h=>`
+            <tr>
+              <td>${h.task}</td>
+              <td><span class="h-bar-wrap"><span class="h-bar" style="width:${h.pct}%;background:${p.color};opacity:.8"></span></span></td>
+              <td style="color:${p.color}">${h.hrs}h</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="sec-title" style="color:${p.color}">Topics to cover</div>
+        <div class="topics">
+          ${p.topics.map(t=>`<span class="topic" style="border-color:${p.color}33;color:${p.color};background:${p.color}0d">${t}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-title" style="color:${p.color}">Week by week</div>
+        <ul class="week-list">
+          ${p.weeks.map(w=>`
+            <li class="week-item">
+              <span class="week-tag" style="border-color:${p.color}44;color:${p.color};background:${p.color}11">${w.w}</span>
+              <span class="week-text">${w.text}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+
+      <div class="section">
+        <div class="sec-title" style="color:${p.color}">Resources</div>
+        <div class="res-list">
+          ${p.resources.map(r=>`<span class="res">${r}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="milestone-box">
+        <div class="ms-icon">${p.milestone.icon}</div>
+        <div class="ms-content">
+          <div class="ms-label">${p.milestone.label}</div>
+          <div class="ms-text" style="color:${p.color}">${p.milestone.text}</div>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  el.querySelector('.phase-header').addEventListener('click',()=>{
+    const wasOpen=el.classList.contains('open');
+    document.querySelectorAll('.phase').forEach(x=>x.classList.remove('open'));
+    if(!wasOpen) el.classList.add('open');
+  });
+
+  tl.appendChild(el);
+});
+</script>
+</body>
+</html>
